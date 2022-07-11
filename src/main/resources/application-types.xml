@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="empidpoc" format="json">
+      <types:shape format="weave" example="examples/empidpoc-3.json"><![CDATA[%dw 2.0
+
+type empidpoc = Array<{|  employeeID: Number {"typeId": "int"},   employeeName: String,   employeeStatus: String|}> {"example": "[{\\\"employeeID\\\":1,\\\"employeeName\\\":\\\"Tom\\\",\\\"employeeStatus\\\":\\\"A\\\"},{\\\"employeeID\\\":2,\\\"employeeName\\\":\\\"Lucy\\\",\\\"employeeStatus\\\":\\\"A\\\"},{\\\"employeeID\\\":3,\\\"employeeName\\\":\\\"Frank\\\",\\\"employeeStatus\\\":\\\"I\\\"},{\\\"employeeID\\\":4,\\\"employeeName\\\":\\\"Jane\\\",\\\"employeeStatus\\\":\\\"I\\\"},{\\\"employeeID\\\":5,\\\"employeeName\\\":\\\"Hari\\\",\\\"employeeStatus\\\":\\\"I\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#92ba6e6f-768a-44ab-b340-294afc20e283">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="empidpoc"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

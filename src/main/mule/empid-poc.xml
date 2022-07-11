@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="26f0d675-031c-4882-b5c3-3d6c90c83b1e" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="4fd5bb81-0ea3-4195-ad23-908e81cd7c21" >
+		<db:oracle-connection host="localhost" user="SYSTEM" password="tiger" instance="XE" />
+	</db:config>
+	<flow name="empid-pocFlow" doc:id="e9eb16ee-99f1-440a-82fe-735a397fe21d" >
+		<http:listener doc:name="Listener" doc:id="826b36d3-e2e8-467a-acf9-7ba4c1b55cc1" config-ref="HTTP_Listener_config" path="fetching-employeeid"/>
+		<logger level="INFO" doc:name="Logger" doc:id="0253354a-2998-48f4-94f4-7665f3bb98cb" message="the flow has started"/>
+		<db:select doc:id="8cdaba1a-a8f2-4e26-a475-078f0152dfde" config-ref="Database_Config">
+			<db:sql ><![CDATA[select emp_id from easts]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	empID: attributes.queryParams.employeeID
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="92ba6e6f-768a-44ab-b340-294afc20e283" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	employeeID: payload01.emp_id	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ff82ea13-d58b-47c1-a171-1e2d53edb8e8" message="the flow has ended"/>
+	</flow>
+</mule>
