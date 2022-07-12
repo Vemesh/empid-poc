@@ -27,7 +27,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 output application/json
 ---
 payload map ( payload01 , indexOfPayload01 ) -> {
-	employeeID: payload01.emp_id	
+	EMPLOYEEID: payload01.emp_id	
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
